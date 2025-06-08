@@ -1,0 +1,233 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+    background: linear-gradient(to bottom right, #a2d4f7, #006994);
+    box-sizing: border-box;
+  }
+
+  h1 {
+    text-align: center;
+    margin: 30px 0 20px;
+    color: white;
+    font-size: 2.5em;
+    letter-spacing: 2px;
+  }
+
+  #hex-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 40px;
+  }
+
+  .hex-row {
+    display: flex;
+    justify-content: center;
+  }
+
+  .hex-row.odd {
+    margin-left: 60px;
+    margin-top: -10px;
+    margin-bottom: -10px;
+  }
+
+  .hex {
+    width: 60px;
+    height: 69px;
+    margin: 1px;
+    background-color: #ccc;
+    background-size: 700px 700px;
+    background-position: center;
+    clip-path: polygon(
+      50% 0%, 100% 25%, 100% 75%,
+      50% 100%, 0% 75%, 0% 25%
+    );
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    cursor: pointer;
+    position: relative;
+    color: white;
+    text-shadow: 1px 1px 2px black;
+    border: 3px solid transparent;
+    box-sizing: border-box;
+
+    animation: backgroundWiggle 60s infinite ease-in-out;
+  }
+
+  /* Border via pseudo-element */
+  .hex::before {
+    content: "";
+    left: 10px;
+    top: 10px;
+    right: 10px;
+    bottom: 10px;
+    position: absolute;
+    mix-blend-mode: none;
+    clip-path: polygon(
+      50% 0%, 100% 25%, 100% 75%,
+      50% 100%, 0% 75%, 0% 25%
+    );
+  }
+
+
+
+  
+
+  .hex:nth-child(odd) {
+    animation-delay: 0s;
+  }
+  .hex:nth-child(even) {
+    animation-delay: 4s;
+  }
+
+  @keyframes backgroundWiggle {
+    0% {
+      background-position: 50% 50%;
+      background-size: 700px 700px;
+    }
+    25% {
+      background-position: 40% 60%;
+      background-size: 720px 720px;
+    }
+    50% {
+      background-position: 60% 40%;
+      background-size: 680px 680px;
+    }
+    75% {
+      background-position: 55% 65%;
+      background-size: 730px 730px;
+    }
+    100% {
+      background-position: 50% 50%;
+      background-size: 700px 700px;
+    }
+  }
+
+  #telsysteem {
+    position: fixed;
+    right: 0;
+    top: 0;
+    width: 250px;
+    height: 100%;
+    background: rgba(255,255,255,0.9);
+    border-left: 3px solid #333;
+    padding: 15px;
+    overflow-y: auto;
+    box-shadow: -3px 0 10px rgba(0,0,0,0.3);
+    font-family: sans-serif;
+    z-index: 20;
+  }
+  
+  #telsysteem h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #333;
+    padding-bottom: 5px;
+  }
+  
+  .player-info {
+    border: 1px solid #999;
+    border-left: 6px solid transparent;
+    padding: 8px;
+    margin-bottom: 10px;
+    background: #f2f2f2;
+  }
+  
+  .player-info .color-box {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    margin-right: 8px;
+    vertical-align: middle;
+    border: 1px solid #000;
+  }
+  
+  .player-info .player-label {
+    font-weight: bold;
+    font-size: 14px;
+  }
+  
+  .player-info .stats {
+    margin-left: 20px;
+    margin-top: 5px;
+    font-size: 13px;
+  }
+
+  @media (max-width: 600px) {
+    body {
+      flex-direction: column;
+      padding: 10px;
+    }
+    .container {
+      max-width: 90%;
+    }
+  }
+
+  .hex {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .hex:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+  }
+  
+  .active {
+    border: 3px solid yellow;
+    box-shadow: 0 0 10px yellow;
+  }
+  
+
+  .overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+  }
+
+  .modal {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+  }
+
+  .modal label {
+    display: block;
+    margin-top: 10px;
+  }
+
+  .modal input[type="number"],
+  .modal select {
+    width: 100%;
+    padding: 4px;
+    margin-top: 4px;
+  }
+
+  .modal .buttons {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* Border colors per player */
+.player-red::before { background-color: rgba(255, 0, 0, 1) !important; }
+.player-yellow::before { background-color: rgba(255, 255, 0, 1) !important; }
+.player-green::before { background-color: rgba(0, 128, 0, 1) !important; }
+.player-orange::before { background-color: rgba(255, 165, 0, 1) !important; }
+.player-white::before { background-color: rgba(255, 255, 255, 1) !important; }
+.player-blue::before { background-color: rgba(0, 0, 255, 1) !important; }
+
+  .info {
+    text-align: center;
+    line-height: 1.1;
+    pointer-events: none;
+    z-index: 1;
+    position: relative;
+  }

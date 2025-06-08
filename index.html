@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ecokrieg – Start</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: linear-gradient(to bottom right, #a2d4f7, #006994);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+    }
+
+    .container {
+      background-color: rgba(255, 255, 255, 0.1);
+      padding: 30px 40px;
+      border-radius: 15px;
+      backdrop-filter: blur(5px);
+      box-shadow: 0 0 15px rgba(0,0,0,0.2);
+      text-align: center;
+      max-width: 400px;
+      width: 100%;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2em;
+      letter-spacing: 2px;
+    }
+
+    label {
+      display: block;
+      margin: 15px 0 5px;
+      font-weight: bold;
+    }
+
+    select {
+      width: 100%;
+      padding: 8px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1em;
+    }
+
+    .player-select {
+      margin-top: 10px;
+    }
+
+    .tiles-needed {
+      margin: 20px 0;
+      font-size: 1.2em;
+      font-weight: bold;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 1.1em;
+      background-color: #004a7c;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      display: none;
+    }
+
+    button:hover {
+      background-color: #0069b1;
+    }
+  </style>
+</head>
+<body>
+
+    
+<div class="container">
+  <h1>Ecokrieg</h1>
+
+  <label for="numPlayers">Aantal spelers</label>
+  <select id="numPlayers" onchange="updatePlayerSelectors()">
+    <option value="">-- Kies aantal spelers --</option>
+    <option value="2">2 spelers</option>
+    <option value="3">3 spelers</option>
+    <option value="4">4 spelers</option>
+    <option value="5">5 spelers</option>
+    <option value="6">6 spelers</option>
+  </select>
+
+  <div id="playerColors"></div>
+
+  <div id="tileCount" class="tiles-needed"></div>
+
+  <button id="startButton" onclick="startGame()">Start</button>
+</div>
+
+<script>
+function startGame() {
+    const numPlayers = parseInt(document.getElementById('numPlayers').value);
+    const playerColors = [];
+
+    for (let i = 1; i <= numPlayers; i++) {
+        const color = document.getElementById(`player-${i}`).value;
+        playerColors.push(color);
+    }
+
+    const params = new URLSearchParams();
+    params.append('numPlayers', numPlayers);
+    params.append('playerColors', playerColors.join(','));
+
+    window.location.href = `spelverloop.html?${params.toString()}`;
+}
+
+const colors = [
+    { value: 'red', name: 'Rood' },
+    { value: 'yellow', name: 'Geel' },
+    { value: 'green', name: 'Groen' },
+    { value: 'orange', name: 'Oranje' },
+    { value: 'white', name: 'Wit' },
+    { value: 'blue', name: 'Blauw' }
+];
+
+function updatePlayerSelectors() {
+    const numPlayers = parseInt(document.getElementById('numPlayers').value);
+    const container = document.getElementById('playerColors');
+    const tileCount = document.getElementById('tileCount');
+    const startButton = document.getElementById('startButton');
+
+    container.innerHTML = '';
+    tileCount.textContent = '';
+    startButton.style.display = 'none';
+
+    if (!numPlayers || numPlayers < 2) return;
+
+    for (let i = 1; i <= numPlayers; i++) {
+        const label = document.createElement('label');
+        label.textContent = `Speler ${i} kleur`;
+        label.setAttribute('for', `player-${i}`);
+        const select = document.createElement('select');
+        select.id = `player-${i}`;
+        select.className = 'player-select';
+
+        const defaultOpt = document.createElement('option');
+        defaultOpt.value = '';
+        defaultOpt.textContent = '-- Kies kleur --';
+        select.appendChild(defaultOpt);
+
+        colors.forEach(color => {
+            const opt = document.createElement('option');
+            opt.value = color.value;
+            opt.textContent = color.name;
+            select.appendChild(opt);
+        });
+
+        container.appendChild(label);
+        container.appendChild(select);
+    }
+
+    const tiles = numPlayers * 12;
+    tileCount.textContent = `Aantal tegels: ${tiles}`;
+
+    const selects = container.querySelectorAll('select');
+    selects.forEach(select => {
+        select.addEventListener('change', () => {
+            const selectedValues = Array.from(selects).map(s => s.value).filter(v => v !== '');
+            const unique = new Set(selectedValues);
+
+            // Disable already selected colors in other dropdowns
+            selects.forEach(s => {
+                Array.from(s.options).forEach(option => {
+                    if (selectedValues.includes(option.value) && option.value !== s.value) {
+                        option.disabled = true;
+                    } else {
+                        option.disabled = false;
+                    }
+                });
+            });
+
+            if (selectedValues.length === numPlayers && unique.size === numPlayers) {
+                startButton.style.display = 'inline-block';
+            } else {
+                startButton.style.display = 'none';
+            }
+        });
+    });
+}
+</script>
+
+</body>
+</html>
